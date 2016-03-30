@@ -9,8 +9,10 @@ import android.widget.TextView;
 
 import com.epicodus.forum.R;
 import com.epicodus.forum.activities.MainActivity;
+import com.epicodus.forum.activities.MessageActivity;
 import com.epicodus.forum.activities.TopicActivity;
 import com.epicodus.forum.models.Category;
+import com.epicodus.forum.models.Message;
 import com.epicodus.forum.models.Topic;
 
 import org.parceler.Parcels;
@@ -27,6 +29,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private Context mContext;
     private ArrayList<Category> categoryArrayList = new ArrayList<>();
     private ArrayList<Topic> topicArrayList = new ArrayList<>();
+    private ArrayList<Message> messageArrayList = new ArrayList<>();
 
     @Bind(R.id.categoryNameTextView) TextView mCategoryNameTextView;
 
@@ -37,9 +40,13 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 for (int i = 0; i < objects.size(); i++) {
                     categoryArrayList.add((Category) objects.get(i));
                 }
-            } else {
+            } else if (objects.get(0) instanceof Topic) {
                 for(int i = 0; i < objects.size(); i++) {
                     this.topicArrayList.add((Topic) objects.get(i));
+                }
+            } else {
+                for(int i = 0; i < objects.size(); i++) {
+                    this.messageArrayList.add((Message) objects.get(i));
                 }
             }
             ButterKnife.bind(this, itemView);
@@ -50,8 +57,16 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(mContext, TopicActivity.class);
-        intent.putExtra("chosenItem", Parcels.wrap(categoryArrayList.get(getLayoutPosition())));
+        Intent intent;
+        if (mContext instanceof MainActivity) {
+            intent = new Intent(mContext, TopicActivity.class);
+            intent.putExtra("chosenItem", Parcels.wrap(categoryArrayList.get(getLayoutPosition())));
+        } else if (mContext instanceof TopicActivity) {
+            intent = new Intent(mContext, MessageActivity.class);
+            intent.putExtra("chosenItem", Parcels.wrap(messageArrayList.get(getLayoutPosition())));
+        } else {
+            intent = new Intent(mContext, MessageActivity.class);
+        }
         mContext.startActivity(intent);
     }
 
@@ -61,6 +76,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     public void bindTopic(Topic topic) {
         mCategoryNameTextView.setText(topic.getTopicName());
+    }
+
+    public void bindMessage(Message message) {
+        mCategoryNameTextView.setText(message.getName());
     }
 
 
