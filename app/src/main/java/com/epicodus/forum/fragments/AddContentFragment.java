@@ -9,11 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.epicodus.forum.ForumApplication;
 import com.epicodus.forum.R;
+import com.epicodus.forum.models.Category;
+import com.firebase.client.Firebase;
 
 import butterknife.Bind;
+import butterknife.BindInt;
 import butterknife.ButterKnife;
 
 /**
@@ -22,6 +26,7 @@ import butterknife.ButterKnife;
 public class AddContentFragment extends DialogFragment implements View.OnClickListener {
     private String childName;
     @Bind(R.id.categoryNameEditText) EditText mCategoryNameText;
+    @Bind(R.id.titleTextView) TextView mTitleTextView;
     @Bind(R.id.addCategoryButton) Button mAddCategoryButton;
 
     public AddContentFragment() {
@@ -41,6 +46,7 @@ public class AddContentFragment extends DialogFragment implements View.OnClickLi
         ButterKnife.bind(this, view);
         Bundle bundle = getArguments();
         childName = bundle.getString("childName");
+        mTitleTextView.setText(childName.substring(0,1).toUpperCase() + childName.substring(1) + " Name");
         mAddCategoryButton.setOnClickListener(this);
         return view;
     }
@@ -53,11 +59,13 @@ public class AddContentFragment extends DialogFragment implements View.OnClickLi
     }
 
     public void saveCategoryToFirebase(String categoryName) {
-        ForumApplication.getAppInstance()
+
+        Firebase data = ForumApplication.getAppInstance()
                 .getFirebaseRef()
                 .child(childName)
-                .push()
-                .setValue(categoryName);
+                .push();
+        Category category = new Category(data.getKey().toString(), categoryName);
+        data.setValue(category);
     }
 
 

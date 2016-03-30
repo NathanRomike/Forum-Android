@@ -22,13 +22,13 @@ public class FirebaseCategoryListAdapter extends FirebaseRecyclerAdapter<ViewHol
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.category_list_item, parent, false);
+
         return new ViewHolder(view, getItems());
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bindCategory(getItem(position));
-
     }
 
     @Override
