@@ -13,7 +13,7 @@ import com.epicodus.forum.ForumApplication;
 import com.epicodus.forum.R;
 import com.epicodus.forum.adapters.FirebaseCategoryListAdapter;
 import com.epicodus.forum.util.FirebaseRecyclerAdapter;
-import com.epicodus.forum.fragments.CategoriesFragment;
+import com.epicodus.forum.fragments.AddContentFragment;
 import com.epicodus.forum.models.Category;
 import com.firebase.client.Firebase;
 import com.firebase.client.Query;
@@ -50,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.addCategory:
                 FragmentManager fm = getSupportFragmentManager();
-                CategoriesFragment categoriesFragment = CategoriesFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putString("childName", "categories");
+                AddContentFragment categoriesFragment = AddContentFragment.newInstance();
+                categoriesFragment.setArguments(bundle);
                 categoriesFragment.show(fm, "fragment_categories");
                 return true;
         }
