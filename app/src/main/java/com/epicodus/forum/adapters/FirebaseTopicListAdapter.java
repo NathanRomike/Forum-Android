@@ -15,9 +15,9 @@ import java.util.ArrayList;
 /**
  * Created by Guest on 3/30/16.
  */
-public class FirebaseCategoryListAdapter extends FirebaseRecyclerAdapter<ViewHolder, Category> {
+public class FirebaseTopicListAdapter extends FirebaseRecyclerAdapter<ViewHolder, Topic> {
 
-    public FirebaseCategoryListAdapter(Query query, Class<Category> itemClass) {
+    public FirebaseTopicListAdapter(Query query, Class<Topic> itemClass) {
         super(query, itemClass);
     }
 
@@ -27,9 +27,9 @@ public class FirebaseCategoryListAdapter extends FirebaseRecyclerAdapter<ViewHol
                 .inflate(R.layout.category_list_item, parent, false);
         ArrayList<Object> firebaseItems = new ArrayList<>();
 
-        ArrayList<Category> categoryList = getItems();
-        for (int i = 0; i < categoryList.size(); i++) {
-            firebaseItems.add(categoryList.get(i));
+        ArrayList<Topic> topicList = getItems();
+        for (int i = 0; i < topicList.size(); i++) {
+            firebaseItems.add(topicList.get(i));
         }
 
         return new ViewHolder(view, firebaseItems);
@@ -37,26 +37,26 @@ public class FirebaseCategoryListAdapter extends FirebaseRecyclerAdapter<ViewHol
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindCategory(getItem(position));
+        holder.bindTopic(getItem(position));
     }
 
     @Override
-    protected void itemAdded(Category item, String key, int position) {
-
-    }
-
-    @Override
-    protected void itemChanged(Category oldItem, Category newItem, String key, int position) {
+    protected void itemAdded(Topic item, String key, int position) {
 
     }
 
     @Override
-    protected void itemRemoved(Category item, String key, int position) {
+    protected void itemChanged(Topic oldItem, Topic newItem, String key, int position) {
 
     }
 
     @Override
-    protected void itemMoved(Category item, String key, int oldPosition, int newPosition) {
+    protected void itemRemoved(Topic item, String key, int position) {
+
+    }
+
+    @Override
+    protected void itemMoved(Topic item, String key, int oldPosition, int newPosition) {
 
     }
 

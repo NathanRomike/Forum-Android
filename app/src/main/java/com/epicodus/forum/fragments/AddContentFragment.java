@@ -63,22 +63,18 @@ public class AddContentFragment extends DialogFragment implements View.OnClickLi
 
     public void saveCategoryToFirebase(String name) {
 
-        Firebase data = ForumApplication.getAppInstance()
-                .getFirebaseRef()
-                .child(childName)
-                .push();
-        switch (childName) {
-            case "category": {
+        Firebase data;
+        if (childName.equals("categories")) {
+                data = ForumApplication.getAppInstance().getFirebaseRef().child(childName).push();
                 Category category = new Category(data.getKey().toString(), name);
                 data.setValue(category);
-            }
-            case "topics": {
+            } else {
+                data = ForumApplication.getAppInstance().getFirebaseRef().child(childName+"/"+categoryId).push();
                 Topic topic = new Topic(name, categoryId, data.getKey().toString());
-                data.child(categoryId).setValue(topic);
+                data.setValue(topic);
             }
         }
 
-    }
 
 
 

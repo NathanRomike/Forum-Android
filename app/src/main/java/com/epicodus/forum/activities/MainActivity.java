@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Firebase mFirebaseRef;
     private FirebaseRecyclerAdapter mAdapter;
 
-    @Bind(R.id.view) RecyclerView mRecylerView;
+    @Bind(R.id.view) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         mAdapter = new FirebaseCategoryListAdapter(mQuery, Category.class);
-        mRecylerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecylerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapter);
     }
 }
