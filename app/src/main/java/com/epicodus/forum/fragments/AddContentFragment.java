@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.epicodus.forum.ForumApplication;
 import com.epicodus.forum.R;
 import com.epicodus.forum.models.Category;
+import com.epicodus.forum.models.Topic;
 import com.firebase.client.Firebase;
 
 import butterknife.Bind;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
  */
 public class AddContentFragment extends DialogFragment implements View.OnClickListener {
     private String childName;
+    private String categoryId;
     @Bind(R.id.categoryNameEditText) EditText mCategoryNameText;
     @Bind(R.id.titleTextView) TextView mTitleTextView;
     @Bind(R.id.addCategoryButton) Button mAddCategoryButton;
@@ -46,6 +48,7 @@ public class AddContentFragment extends DialogFragment implements View.OnClickLi
         ButterKnife.bind(this, view);
         Bundle bundle = getArguments();
         childName = bundle.getString("childName");
+        categoryId = bundle.getString("categoryId");
         mTitleTextView.setText(childName.substring(0,1).toUpperCase() + childName.substring(1) + " Name");
         mAddCategoryButton.setOnClickListener(this);
         return view;
@@ -58,14 +61,23 @@ public class AddContentFragment extends DialogFragment implements View.OnClickLi
         dismiss();
     }
 
-    public void saveCategoryToFirebase(String categoryName) {
+    public void saveCategoryToFirebase(String name) {
 
         Firebase data = ForumApplication.getAppInstance()
                 .getFirebaseRef()
                 .child(childName)
                 .push();
-        Category category = new Category(data.getKey().toString(), categoryName);
-        data.setValue(category);
+        switch (childName) {
+            case "category": {
+                Category category = new Category(data.getKey().toString(), name);
+                data.setValue(category);
+            }
+            case "topics": {
+                Topic topic = new Topic(name, categoryId, data.getKey().toString());
+                data.child(categoryId).setValue(topic);
+            }
+        }
+
     }
 
 

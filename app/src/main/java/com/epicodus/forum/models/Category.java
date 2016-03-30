@@ -10,8 +10,8 @@ import java.util.ArrayList;
 
 @Parcel
 public class Category {
-    private String categoryName;
-    private String categoryId;
+     String categoryName;
+     String categoryId;
 //    private static ArrayList<Category> catagoryList = new ArrayList<>();
 
     public Category() {

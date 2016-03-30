@@ -39,9 +39,9 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(mContext, TopicActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("category", Parcels.wrap(categoryArrayList.get(getLayoutPosition())));
-        intent.putExtra("category", bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("category", Parcels.wrap(categoryArrayList.get(getLayoutPosition())));
+        intent.putExtra("category", Parcels.wrap(categoryArrayList.get(getLayoutPosition())));
         mContext.startActivity(intent);
     }
 
