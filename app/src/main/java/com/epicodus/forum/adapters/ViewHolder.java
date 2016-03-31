@@ -63,7 +63,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
             intent.putExtra("chosenItem", Parcels.wrap(categoryArrayList.get(getLayoutPosition())));
         } else if (mContext instanceof TopicActivity) {
             intent = new Intent(mContext, MessageActivity.class);
-            intent.putExtra("chosenItem", Parcels.wrap(messageArrayList.get(getLayoutPosition())));
+            intent.putExtra("chosenItem", Parcels.wrap(topicArrayList.get(getLayoutPosition())));
         } else {
             intent = new Intent(mContext, MessageActivity.class);
         }
