@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.epicodus.forum.R;
 import com.epicodus.forum.models.Category;
-import com.epicodus.forum.models.Topic;
 import com.epicodus.forum.util.FirebaseRecyclerAdapter;
 import com.firebase.client.Query;
 
@@ -24,7 +23,7 @@ public class FirebaseCategoryListAdapter extends FirebaseRecyclerAdapter<ViewHol
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.category_list_item, parent, false);
+                .inflate(R.layout.header_title_list_item, parent, false);
         ArrayList<Object> firebaseItems = new ArrayList<>();
 
         ArrayList<Category> categoryList = getItems();

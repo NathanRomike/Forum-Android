@@ -30,6 +30,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private ArrayList<Category> categoryArrayList = new ArrayList<>();
     private ArrayList<Topic> topicArrayList = new ArrayList<>();
     private ArrayList<Message> messageArrayList = new ArrayList<>();
+    private TextView mMessageBodyTextView;
+    private TextView mMessageDateTextView;
 
     @Bind(R.id.categoryNameTextView) TextView mCategoryNameTextView;
 
@@ -49,9 +51,14 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     this.messageArrayList.add((Message) objects.get(i));
                 }
             }
-            ButterKnife.bind(this, itemView);
+            if (!(itemView.getContext() instanceof MessageActivity)) {
+                ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(this);
+            } else {
+                mMessageBodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
+                mMessageDateTextView = (TextView) itemView.findViewById(R.id.messageDateText);
+            }
             mContext = itemView.getContext();
-            itemView.setOnClickListener(this);
         }
     }
 
@@ -79,7 +86,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     public void bindMessage(Message message) {
-        mCategoryNameTextView.setText(message.getName());
+        mMessageBodyTextView.setText(message.getMessage());
+        mMessageDateTextView.setText(message.getDateCreated());
     }
 
 

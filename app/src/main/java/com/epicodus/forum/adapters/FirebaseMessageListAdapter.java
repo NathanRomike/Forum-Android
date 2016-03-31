@@ -24,7 +24,7 @@ public class FirebaseMessageListAdapter extends FirebaseRecyclerAdapter<ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.category_list_item, parent, false);
+                .inflate(R.layout.message_list_item, parent, false);
         ArrayList<Object> firebaseItems = new ArrayList<>();
 
         ArrayList<Message> topicList = getItems();

@@ -1,24 +1,29 @@
 package com.epicodus.forum.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by Guest on 3/30/16.
  */
 public class Message {
-    private String categoryId;
     private String topicId;
     private String messageId;
     private String userID;
-    private Date dateCreated;
+    private String dateCreated;
     private String message;
 
-    public Message(String categoryId, String topicId, String messageId, String userID, Date dateCreated, String message) {
-        this.categoryId = categoryId;
+    public Message() {
+    }
+
+    public Message(String topicId, String messageId, String userID, String message) {
         this.topicId = topicId;
         this.messageId = messageId;
         this.userID = userID;
-        this.dateCreated = dateCreated;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date date = new Date();
+        this.dateCreated = dateFormat.format(date);
         this.message = message;
     }
 
@@ -26,16 +31,12 @@ public class Message {
         return userID;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
     public String getMessage() {
         return message;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
     }
 
     public String getTopicId() {
