@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.epicodus.forum.ForumApplication;
 import com.epicodus.forum.R;
@@ -34,6 +35,7 @@ public class MessageActivity extends AppCompatActivity {
     private Query mQuery;
 
     @Bind(R.id.messageRecycleView) RecyclerView mRecyclerView;
+    @Bind(R.id.topicTextView) TextView mTopicTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MessageActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         topic = Parcels.unwrap(bundle.getParcelable("chosenItem"));
         ButterKnife.bind(this);
+        mTopicTextView.setText(topic.getTopicName());
 
         setUpFirebaseQuery();
         setUpRecyclerView();
