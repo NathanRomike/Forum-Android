@@ -5,4 +5,8 @@
         android:title="Add category"
         app:showAsAction="always"
         android:id="@+id/addCategory"/>
+    <item
+        android:title="sign in"
+        app:showAsAction="always"
+        android:id="@+id/signIn"/>
 </menu>
