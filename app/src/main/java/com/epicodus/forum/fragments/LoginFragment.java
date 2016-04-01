@@ -1,0 +1,38 @@
+package com.epicodus.forum.fragments;
+
+
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.epicodus.forum.R;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class LoginFragment extends DialogFragment {
+
+    public LoginFragment() {
+        // Required empty public constructor
+    }
+
+    public static LoginFragment newInstance() {
+        return new LoginFragment();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        return view;
+    }
+
+
+}

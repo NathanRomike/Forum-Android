@@ -13,11 +13,12 @@ public class Message {
     private String userID;
     private String dateCreated;
     private String message;
+    private String profileURL;
 
     public Message() {
     }
 
-    public Message(String topicId, String messageId, String userID, String message) {
+    public Message(String topicId, String messageId, String userID, String message, String profileURL) {
         this.topicId = topicId;
         this.messageId = messageId;
         this.userID = userID;
@@ -25,6 +26,7 @@ public class Message {
         Date date = new Date();
         this.dateCreated = dateFormat.format(date);
         this.message = message;
+        this.profileURL = profileURL;
     }
 
     public String getUserID() {
@@ -47,4 +49,7 @@ public class Message {
         return messageId;
     }
 
+    public String getProfileURL() {
+        return profileURL;
+    }
 }

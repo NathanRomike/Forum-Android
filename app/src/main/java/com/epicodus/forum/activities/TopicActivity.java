@@ -17,23 +17,30 @@ import com.epicodus.forum.R;
 import com.epicodus.forum.adapters.FirebaseCategoryListAdapter;
 import com.epicodus.forum.adapters.FirebaseTopicListAdapter;
 import com.epicodus.forum.fragments.AddContentFragment;
+import com.epicodus.forum.fragments.LogOutFragment;
+import com.epicodus.forum.fragments.LoginFragment;
 import com.epicodus.forum.models.Category;
 import com.epicodus.forum.models.Topic;
 import com.epicodus.forum.util.FirebaseRecyclerAdapter;
+import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.Query;
+import com.firebase.ui.auth.core.AuthProviderType;
+import com.firebase.ui.auth.core.FirebaseLoginBaseActivity;
+import com.firebase.ui.auth.core.FirebaseLoginError;
 
 import org.parceler.Parcels;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class TopicActivity extends AppCompatActivity {
+public class TopicActivity extends FirebaseLoginBaseActivity {
     @Bind(R.id.topicRecycleView) RecyclerView mRecyclerView;
     private Category category;
     private Query mQuery;
     private Firebase mFirebaseRef;
     private FirebaseRecyclerAdapter mAdapter;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +58,45 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.topic_menu, menu);
+        inflater.inflate(R.menu.topic_menu_sign_in, menu);
+        this.menu = menu;
+        authValidator();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        FragmentManager fm = getSupportFragmentManager();
-        Bundle bundle = new Bundle();
-        bundle.putString("childName", "topics");
-        bundle.putString("categoryId", category.getCategoryId());
-        AddContentFragment topicFragment = AddContentFragment.newInstance();
-        topicFragment.setArguments(bundle);
-        topicFragment.show(fm, "Test String");
+        switch (item.getItemId()) {
+            case R.id.addTopic:
+                if (mFirebaseRef.getAuth() != null) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("childName", "topics");
+                    bundle.putString("categoryId", category.getCategoryId());
+                    AddContentFragment topicFragment = AddContentFragment.newInstance();
+                    topicFragment.setArguments(bundle);
+                    topicFragment.show(fm, "Test String");
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    LoginFragment loginFragment = LoginFragment.newInstance();
+                    loginFragment.show(fm, "fragment_login");
+                }
+                return true;
+            case R.id.signIn:
+                if (mFirebaseRef.getAuth() == null) {
+                    showFirebaseLoginPrompt();
+                } else {
+                    FragmentManager logOutFRManager = getSupportFragmentManager();
+                    Bundle logOutBundle = new Bundle();
+                    logOutBundle.putString("email", mFirebaseRef.getAuth().getProviderData().get("email").toString());
+                    LogOutFragment logOutFragment = LogOutFragment.newInstance();
+                    logOutFragment.setArguments(logOutBundle);
+                    logOutFragment.show(logOutFRManager, "fragment_log_out");
+                    authValidator();
+                    return true;
+                }
+
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -79,5 +112,48 @@ public class TopicActivity extends AppCompatActivity {
         mAdapter = new FirebaseTopicListAdapter(mQuery, Topic.class);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void authValidator() {
+        if (menu != null) {
+            MenuItem signOption = menu.findItem(R.id.signIn);
+            if (mFirebaseRef.getAuth() == null) {
+                signOption.setTitle("sign in");
+            } else {
+                signOption.setTitle("sign out");
+            }
+        }
+    }
+
+    @Override
+    protected Firebase getFirebaseRef() {
+        return ForumApplication.getAppInstance().getFirebaseRef();
+    }
+
+    @Override
+    protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
+        Log.d("Facebook error: ", "facebook return an error");
+        dismissFirebaseLoginPrompt();
+    }
+
+    @Override
+    protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
+        Log.d("Facebook error: ", "cut users hands");
+        dismissFirebaseLoginPrompt();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setEnabledAuthProvider(AuthProviderType.FACEBOOK);
+        setEnabledAuthProvider(AuthProviderType.PASSWORD);
+    }
+
+    @Override
+    public void onFirebaseLoggedIn(AuthData authData) {
+        // TODO: Handle successful login
+        Log.d("User's UID: ", authData.getUid());
+        Log.d("User's UID: ", authData.getProviderData().get("profileImageURL").toString());
+        authValidator();
     }
 }

@@ -16,6 +16,7 @@ import com.epicodus.forum.ForumApplication;
 import com.epicodus.forum.R;
 import com.epicodus.forum.adapters.FirebaseCategoryListAdapter;
 import com.epicodus.forum.fragments.LogOutFragment;
+import com.epicodus.forum.fragments.LoginFragment;
 import com.epicodus.forum.util.FirebaseRecyclerAdapter;
 import com.epicodus.forum.fragments.AddContentFragment;
 import com.epicodus.forum.models.Category;
@@ -33,8 +34,10 @@ public class MainActivity extends FirebaseLoginBaseActivity implements View.OnCl
     private Query mQuery;
     private Firebase mFirebaseRef;
     private FirebaseRecyclerAdapter mAdapter;
+    private Menu menu;
 
     @Bind(R.id.view) RecyclerView mRecyclerView;
+//    @Bind(R.id.signIn) MenuItem mSignInMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +50,48 @@ public class MainActivity extends FirebaseLoginBaseActivity implements View.OnCl
     }
 
     @Override
+    public void onResume () {
+        super.onResume();
+        authValidator();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.category_menu, menu);
+        inflater.inflate(R.menu.category_menu_sign_in, menu);
+        this.menu = menu;
+        authValidator();
         return true;
+    }
+
+    private void authValidator() {
+        if (menu != null) {
+            MenuItem signOption = menu.findItem(R.id.signIn);
+            if (mFirebaseRef.getAuth() == null) {
+                signOption.setTitle("sign in");
+            } else {
+                signOption.setTitle("sign out");
+            }
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addCategory:
-                FragmentManager fm = getSupportFragmentManager();
-                Bundle bundle = new Bundle();
-                bundle.putString("childName", "categories");
-                AddContentFragment categoriesFragment = AddContentFragment.newInstance();
-                categoriesFragment.setArguments(bundle);
-                categoriesFragment.show(fm, "fragment_categories");
+                if (mFirebaseRef.getAuth() != null) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("childName", "categories");
+                    AddContentFragment categoriesFragment = AddContentFragment.newInstance();
+                    categoriesFragment.setArguments(bundle);
+                    categoriesFragment.show(fm, "fragment_categories");
+                } else {
+                    FragmentManager fm = getSupportFragmentManager();
+                    LoginFragment loginFragment = LoginFragment.newInstance();
+                    loginFragment.show(fm, "fragment_login");
+                }
                 return true;
-
             case R.id.signIn:
                 if (mFirebaseRef.getAuth() == null) {
                     showFirebaseLoginPrompt();
@@ -75,6 +102,7 @@ public class MainActivity extends FirebaseLoginBaseActivity implements View.OnCl
                     LogOutFragment logOutFragment = LogOutFragment.newInstance();
                     logOutFragment.setArguments(logOutBundle);
                     logOutFragment.show(logOutFRManager, "fragment_log_out");
+                    authValidator();
                 }
 //                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 //                startActivity(intent);
@@ -105,11 +133,13 @@ public class MainActivity extends FirebaseLoginBaseActivity implements View.OnCl
     @Override
     protected void onFirebaseLoginProviderError(FirebaseLoginError firebaseLoginError) {
         Log.d("Facebook error: ", "facebook return an error");
+        dismissFirebaseLoginPrompt();
     }
 
     @Override
     protected void onFirebaseLoginUserError(FirebaseLoginError firebaseLoginError) {
         Log.d("Facebook error: ", "cut users hands");
+        dismissFirebaseLoginPrompt();
     }
 
     @Override
@@ -123,6 +153,8 @@ public class MainActivity extends FirebaseLoginBaseActivity implements View.OnCl
     public void onFirebaseLoggedIn(AuthData authData) {
         // TODO: Handle successful login
         Log.d("User's UID: ", authData.getUid());
+        Log.d("User's UID: ", authData.getProviderData().get("profileImageURL").toString());
+        authValidator();
     }
 
     @Override

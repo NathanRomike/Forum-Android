@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.epicodus.forum.ForumApplication;
 import com.epicodus.forum.R;
 import com.epicodus.forum.activities.MainActivity;
 import com.epicodus.forum.activities.MessageActivity;
@@ -14,6 +17,8 @@ import com.epicodus.forum.activities.TopicActivity;
 import com.epicodus.forum.models.Category;
 import com.epicodus.forum.models.Message;
 import com.epicodus.forum.models.Topic;
+import com.firebase.client.Firebase;
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -32,6 +37,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private ArrayList<Message> messageArrayList = new ArrayList<>();
     private TextView mMessageBodyTextView;
     private TextView mMessageDateTextView;
+    private ImageView profileImageView;
+    private ImageView trashCan;
 
     @Bind(R.id.categoryNameTextView) TextView mCategoryNameTextView;
 
@@ -57,6 +64,8 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
             } else {
                 mMessageBodyTextView = (TextView) itemView.findViewById(R.id.bodyTextView);
                 mMessageDateTextView = (TextView) itemView.findViewById(R.id.messageDateText);
+                profileImageView = (ImageView) itemView.findViewById(R.id.profileView);
+                trashCan = (ImageView) itemView.findViewById(R.id.trashCanImageView);
             }
             mContext = itemView.getContext();
         }
@@ -85,9 +94,23 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         mCategoryNameTextView.setText(topic.getTopicName());
     }
 
-    public void bindMessage(Message message) {
+    public void bindMessage(final Message message) {
         mMessageBodyTextView.setText(message.getMessage());
         mMessageDateTextView.setText(message.getDateCreated());
+        Picasso.with(mContext).load(message.getProfileURL()).resize(50,50).centerCrop().into(profileImageView);
+        trashCan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Firebase firebase = ForumApplication.getAppInstance().getFirebaseRef();
+                String userId = firebase.getAuth().getUid().toString();
+                if (messageArrayList.get(getLayoutPosition()).getUserID().equals(userId)){
+                    Firebase firebaseRef = new Firebase("https://itforum.firebaseio.com/messages/" + message.getTopicId() + "/" + message.getMessageId());
+                    firebaseRef.removeValue();
+                } else {
+                    Toast.makeText(mContext, "Don't touch! I'm not yours!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
 

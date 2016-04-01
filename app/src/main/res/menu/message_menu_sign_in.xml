@@ -5,4 +5,9 @@
         android:title="Add message"
         app:showAsAction="always"
         android:id="@+id/addMessage"/>
+
+    <item
+        android:title="sign in"
+        app:showAsAction="always"
+        android:id="@+id/signIn"/>
 </menu>

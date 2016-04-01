@@ -6,7 +6,7 @@
         app:showAsAction="always"
         android:id="@+id/addCategory"/>
     <item
-        android:title="sign in"
+        android:title="account"
         app:showAsAction="always"
         android:id="@+id/signIn"/>
 </menu>

@@ -79,7 +79,9 @@ public class AddContentFragment extends DialogFragment implements View.OnClickLi
                 data.setValue(topic);
             } else {
                 data = ForumApplication.getAppInstance().getFirebaseRef().child(childName + "/" + topicId).push();
-                Message message = new Message(topicId, data.getKey().toString(), "userIdHere", name);
+                String profileURL = ForumApplication.getAppInstance().getFirebaseRef().getAuth().getProviderData().get("profileImageURL").toString();
+                String userId = ForumApplication.getAppInstance().getFirebaseRef().getAuth().getUid();
+                Message message = new Message(topicId, data.getKey().toString(), userId, name, profileURL);
                 data.setValue(message);
             }
         }
